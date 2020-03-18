@@ -1,0 +1,128 @@
+# How to execute
+# Create a file with the extension .sh
+# Use the comand chmod +x file_name.sh in your terminal
+# Answer the terminal questions with Y/N
+# Packages on this script:
+# NVM
+# Node lts
+# Git
+# Yarn
+# Visual Studio Code
+# Arc Theme
+# Arc Icons
+# Breeze Cursor
+# Fira Code
+echo -n "Install Git? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  sudo add-apt-repository ppa:git-core/ppa
+  sudo apt update
+  sudo apt install git
+fi
+echo -n "Install Zsh? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  sudo apt-get update
+  sudo apt install zsh
+  chsh -s $(which zsh)
+fi
+echo -n "Install Oh-MyZsh? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  sudo apt-get update
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+echo -n "Install zsh-nvm? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  git clone https://github.com/lukechilds/zsh-nvm ~/.oh-my-zsh/custom/plugins/zsh-nvm
+  plugins+=(zsh-nvm)
+fi
+echo -n "Install NVM? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+  sudo apt-get update
+  export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+fi
+echo -n "Install Node lts version? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  sudo apt-get update
+  nvm install --lts
+fi
+echo -n "Install Node lts-dubnium version? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  sudo apt-get update
+  nvm install --lts=dubnium
+fi
+echo -n "Install Node lts-carbon version? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  sudo apt-get update
+  nvm install --lts=carbon
+fi
+echo -n "Install Yarn? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+  sudo apt remove cmdtest
+  sudo apt update
+  sudo apt-get install --no-install-recommends yarn
+fi
+echo -n "Install Fira Code font? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  fonts_dir="${HOME}/.local/share/fonts"
+  if [ ! -d "${fonts_dir}" ]; then
+    echo "mkdir -p $fonts_dir"
+    mkdir -p "${fonts_dir}"
+  else
+    echo "Found fonts dir $fonts_dir"
+  fi
+  for type in Bold Light Medium Regular Retina; do
+    file_path="${HOME}/.local/share/fonts/FiraCode-${type}.ttf"
+    file_url="https://github.com/tonsky/FiraCode/blob/master/distr/ttf/FiraCode-${type}.ttf?raw=true"
+    if [ ! -e "${file_path}" ]; then
+      echo "wget -O $file_path $file_url"
+      wget -O "${file_path}" "${file_url}"
+    else
+      echo "Found existing file $file_path"
+    fi
+  done
+  echo "fc-cache -f"
+  fc-cache -f
+fi
+echo -n "Install Visual Studio Code? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor >packages.microsoft.gpg
+  sudo install -o root -g root -m 644 packages.microsoft.gpg /usr/share/keyrings/
+  sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
+  sudo apt-get install apt-transport-https
+  sudo apt-get update
+  sudo apt-get install code
+fi
+echo -n "Install arc theme? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  sudo add-apt-repository ppa:noobslab/themes
+  sudo apt-get update
+  sudo apt-get install arc-theme
+fi
+echo -n "Install arc icon theme? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  sudo add-apt-repository ppa:noobslab/icons
+  sudo apt-get update
+  sudo apt-get install arc-icons
+fi
+echo -n "Install breeze cursor theme? (y/n)? "
+read answer
+if [ "$answer" != "${answer#[Yy]}" ]; then
+  sudo apt-get update
+  sudo apt install breeze-cursor-theme
+fi
